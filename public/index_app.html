@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkMágico Chatbot v6.0 - IA Conversacional Inteligente para Vendas Online</title>
+    <meta name="description" content="Nova geração de chatbot com IA avançada, extração universal de dados e deep linking multiplataforma. Transforme suas páginas de vendas em conversas inteligentes.">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-light: #60a5fa;
+            --secondary: #8b5cf6;
+            --accent: #06d6a0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --dark: #0f172a;
+            --dark-surface: #1e293b;
+            --dark-elevated: #334155;
+            --dark-border: #475569;
+            --dark-text: #f8fafc;
+            --dark-text-secondary: #cbd5e1;
+            --dark-text-muted: #94a3b8;
+            --white: #ffffff;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            --gradient-success: linear-gradient(135deg, var(--success) 0%, var(--accent) 100%);
+            --gradient-bg: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+            --border-subtle: rgba(148, 163, 184, 0.1);
+            --glass-bg: rgba(30, 41, 59, 0.8);
+            --glass-border: rgba(148, 163, 184, 0.2);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--gradient-bg);
+            min-height: 100vh;
+            color: var(--dark-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            background: rgba(15, 23, 42, 0.9);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .logo-text h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+        }
+        
+        .version-badge {
+            background: var(--gradient-success);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: var(--shadow-md);
+            margin-left: 0.5rem;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 0.6rem 1.2rem;
+            border-radius: 24px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .status-text {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--success);
+        }
+        
+        .lgpd-badge {
+            cursor: pointer;
+            background: rgba(59, 130, 246, 0.1);
+            padding: 0.6rem 1.2rem;
+            border-radius: 24px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--primary-light);
+        }
+        
+        .lgpd-badge:hover {
+            background: rgba(59, 130, 246, 0.2);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem 2rem 2rem;
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 2rem;
+            min-height: calc(100vh - 140px);
+        }
+        
+        /* Control Panel */
+        .control-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            height: fit-content;
+            box-shadow: var(--shadow-xl);
+            position: sticky;
+            top: 120px;
+        }
+        
+        .panel-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .panel-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 0.5rem;
+        }
+        
+        .panel-subtitle {
+            color: var(--dark-text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .success-alert {
+            background: var(--gradient-success);
+            color: white;
+            padding: 1.2rem;
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .success-alert::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        .form-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            font-size: 0.9rem;
+        }
+        
+        .form-label i {
+            color: var(--primary-light);
+            width: 16px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1.2rem;
+            border: 2px solid var(--dark-border);
+            border-radius: 12px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            background: var(--dark-surface);
+            color: var(--dark-text);
+        }
+        
+        .form-input::placeholder {
+            color: var(--dark-text-muted);
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            background: var(--dark-elevated);
+        }
+        
+        .form-textarea {
+            min-height: 90px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        .input-hint {
+            font-size: 0.75rem;
+            color: var(--dark-text-muted);
+            margin-top: 0.25rem;
+            font-style: italic;
+        }
+        
+        .btn {
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.4);
+        }
+        
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.6rem;
+            margin-top: 1.5rem;
+        }
+        
+        .social-btn {
+            padding: 0.8rem 0.4rem;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.7rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .social-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .social-btn i {
+            font-size: 1.1rem;
+        }
+        
+        .whatsapp { background: linear-gradient(135deg, #25d366, #1ebe57); }
+        .instagram { background: linear-gradient(135deg, #f09433, #dc2743, #cc2366, #bc1888); }
+        .facebook { background: linear-gradient(135deg, #1877f2, #0c63d4); }
+        .youtube { background: linear-gradient(135deg, #ff0000, #cc0000); }
+        .tiktok { background: linear-gradient(135deg, #000000, #333333); }
+        .twitter { background: linear-gradient(135deg, #1da1f2, #0c7abf); }
+        .kwai { background: linear-gradient(135deg, #ff6600, #e55100); }
+        .linkedin { background: linear-gradient(135deg, #0077b5, #005885); }
+        .telegram { background: linear-gradient(135deg, #0088cc, #006699); }
+        .messenger { background: linear-gradient(135deg, #006aff, #0056cc); }
+        .prompt { background: linear-gradient(135deg, #10b981, #059669); }
+        .analytics { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+        
+        /* Dashboard */
+        .dashboard {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .dashboard-header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+        }
+        
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            border-radius: 24px 24px 0 0;
+        }
+        
+        .dashboard-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 0.5rem;
+        }
+        
+        .dashboard-subtitle {
+            color: var(--dark-text-secondary);
+            font-size: 0.95rem;
+        }
+        
+        /* Analytics Cards */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.2rem;
+        }
+        
+        .analytics-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .analytics-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+        }
+        
+        .analytics-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .card-title {
+            font-weight: 600;
+            color: var(--dark-text-secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .card-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--gradient-primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .card-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--dark-text);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-change {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--success);
+        }
+        
+        /* Chat Preview */
+        .chat-preview {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 400px;
+        }
+        
+        .chat-header {
+            padding: 1.2rem 1.5rem;
+            background: var(--gradient-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+        
+        .chat-header::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        }
+        
+        .chat-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 1.2rem;
+            overflow-y: auto;
+            background: var(--dark-surface);
+        }
+        
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-end;
+            gap: 0.6rem;
+        }
+        
+        .message.user {
+            justify-content: flex-end;
+            flex-direction: row-reverse;
+        }
+        
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .user .message-avatar {
+            background: var(--gradient-success);
+        }
+        
+        .message-content {
+            max-width: 70%;
+            padding: 0.8rem 1rem;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .bot .message-content {
+            background: var(--dark-elevated);
+            color: var(--dark-text);
+            border: 1px solid var(--dark-border);
+        }
+        
+        .user .message-content {
+            background: var(--gradient-primary);
+            color: white;
+        }
+        
+        .chat-input {
+            padding: 1.2rem;
+            background: var(--dark-surface);
+            border-top: 1px solid var(--dark-border);
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+        
+        .chat-input-field {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--dark-border);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            background: var(--dark-elevated);
+            color: var(--dark-text);
+        }
+        
+        .chat-input-field::placeholder {
+            color: var(--dark-text-muted);
+        }
+        
+        .chat-input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        
+        .send-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .send-btn:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        /* Widget Code Generator */
+        .widget-generator {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .widget-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .code-block {
+            background: var(--dark);
+            color: var(--accent);
+            padding: 1.5rem;
+            border-radius: 16px;
+            font-family: 'Monaco', 'Consolas', 'Fira Code', monospace;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            position: relative;
+            margin-top: 0.75rem;
+            border: 1px solid var(--dark-border);
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: var(--primary-light);
+            padding: 0.5rem 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .copy-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        /* Loading States */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--dark-border);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+        }
+        
+        .spinner.active {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .typing-indicator {
+            display: none;
+            padding: 1rem 2rem;
+            color: var(--dark-text-secondary);
+            font-style: italic;
+            text-align: center;
+        }
+        
+        /* Results */
+        .result {
+            display: none;
+        }
+        
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--success);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+        
+        .chatbot-link {
+            background: rgba(59, 130, 246, 0.1);
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .chatbot-link a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .chatbot-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .extracted-data {
+            background: var(--dark-surface);
+            border: 1px solid var(--dark-border);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .extracted-data h3 {
+            color: var(--dark-text);
+            margin-bottom: 0.5rem;
+        }
+        
+        .extracted-data p {
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--dark-text-secondary);
+        }
+        
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--dark-surface);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--dark-border);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+        
+        /* Privacy Footer */
+        .privacy-footer {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(15, 23, 42, 0.8);
+            border-top: 1px solid var(--glass-border);
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: var(--dark-text-muted);
+        }
+        
+        .privacy-footer a {
+            color: var(--primary-light);
+            text-decoration: none;
+        }
+        
+        .privacy-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Consent Modal */
+        .consent-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        
+        .consent-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+        
+        .consent-content {
+            background: var(--dark-surface);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            z-index: 1001;
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+        }
+        
+        .consent-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .consent-header h3 {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .consent-body {
+            padding: 1.5rem;
+        }
+        
+        .consent-warning {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .consent-warning i {
+            color: var(--warning);
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .consent-details p {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .consent-details ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark-text-secondary);
+        }
+        
+        .legal-basis {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid var(--primary);
+            padding: 0.5rem 1rem;
+            margin: 1rem 0;
+            font-size: 0.85rem;
+            color: var(--primary-light);
+        }
+        
+        .url-verification {
+            margin: 1.5rem 0;
+        }
+        
+        .url-verification label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .robots-check {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--dark-text-muted);
+            font-style: italic;
+        }
+        
+        .consent-footer {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .btn-secondary {
+            flex: 1;
+            padding: 1rem;
+            border: 1px solid var(--dark-border);
+            background: transparent;
+            color: var(--dark-text);
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: var(--dark-elevated);
+        }
+        
+        .btn-primary-consent {
+            flex: 1;
+            background: var(--gradient-primary);
+            color: white;
+            padding: 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .btn-primary-consent:hover {
+            opacity: 0.9;
+        }
+        
+        .consent-links {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+        }
+        
+        .consent-links a {
+            color: var(--primary-light);
+            text-decoration: none;
+            margin: 0 0.5rem;
+        }
+        
+        .consent-links a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Toast Notification */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+        }
+        
+        .toast {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            min-width: 250px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .toast.show {
+            opacity: 1;
+        }
+        
+        .toast.success {
+            background-color: var(--success);
+        }
+        
+        .toast.error {
+            background-color: var(--error);
+        }
+        
+        .toast i {
+            font-size: 1.2em;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                padding: 0 1rem 1rem 1rem;
+            }
+        
+            .control-panel {
+                position: static;
+                top: auto;
+            }
+        
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+        
+            .status-indicator, .lgpd-badge {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+        
+            .chat-preview {
+                height: 300px;
+            }
+        
+            .consent-content {
+                margin: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="toast-container" id="toastContainer"></div>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-robot"></i></div>
+                <div class="logo-text">
+                    <h1>LinkMágico</h1>
+                    <span class="version-badge">v6.0</span>
+                </div>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Sistema Online</span>
+                </div>
+                <div class="lgpd-badge" id="lgpdBadge">
+                    <span>Conforme LGPD</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="control-panel">
+            <div class="panel-header">
+                <h2 class="panel-title">Criar Chatbot</h2>
+                <p class="panel-subtitle">Configure seu assistente de vendas inteligente</p>
+            </div>
+
+            <div class="success-alert" id="successAlert" style="display: none;">
+                Sua IA Conversacional está pronta para impulsionar suas vendas!
+            </div>
+
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="robotName" class="form-label"><i class="fas fa-robot"></i> Nome do Assistente Virtual:</label>
+                    <input type="text" id="robotName" class="form-input" value="@teste" placeholder="Ex: @AssistenteDeVendas">
+                </div>
+                <div class="form-group">
+                    <label for="salesUrl" class="form-label"><i class="fas fa-link"></i> URL da Página:</label>
+                    <input type="url" id="salesUrl" class="form-input" value="https://www.arsenalsecretodosceos.com.br" placeholder="Ex: https://seusite.com/pagina-de-vendas">
+                    <p class="input-hint">A URL deve ser da sua página de vendas ou de conteúdo relevante.</p>
+                </div>
+                <div class="form-group">
+                    <label for="customInstructions" class="form-label"><i class="fas fa-comment-dots"></i> Instruções Personalizadas (opcional):</label>
+                    <textarea id="customInstructions" class="form-input form-textarea" placeholder="Ex: Sempre responda de forma amigável, consultiva e entusiasmada, mas objetiva">Sempre responda de forma amigável, consultiva e entusiasmada, mas objetiva</textarea>
+                    <p class="input-hint">Dica: peça respostas curtas (2-3 frases), objetivas e sem repetições.</p>
+                </div>
+                <button class="btn btn-primary" id="activateChatbotBtn">
+                    <i class="fas fa-play-circle"></i> Ativar Chatbot Inteligente
+                </button>
+            </div>
+
+            <div class="social-grid">
+                <button class="social-btn whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                <button class="social-btn instagram"><i class="fab fa-instagram"></i> Instagram</button>
+                <button class="social-btn facebook"><i class="fab fa-facebook"></i> Facebook</button>
+                <button class="social-btn youtube"><i class="fab fa-youtube"></i> YouTube</button>
+                <button class="social-btn tiktok"><i class="fab fa-tiktok"></i> TikTok</button>
+                <button class="social-btn twitter"><i class="fab fa-twitter"></i> Twitter</button>
+                <button class="social-btn kwai"><i class="fas fa-video"></i> Kwai</button>
+                <button class="social-btn linkedin"><i class="fab fa-linkedin"></i> LinkedIn</button>
+                <button class="social-btn telegram"><i class="fab fa-telegram-plane"></i> Telegram</button>
+                <button class="social-btn messenger"><i class="fab fa-facebook-messenger"></i> Messenger</button>
+                <button class="social-btn prompt"><i class="fas fa-lightbulb"></i> Prompt</button>
+                <button class="social-btn analytics"><i class="fas fa-chart-line"></i> Analytics</button>
+            </div>
+        </div>
+
+        <div class="dashboard">
+            <div class="dashboard-header">
+                <h2 class="dashboard-title">Dashboard Analytics</h2>
+                <p class="dashboard-subtitle">Acompanhe o desempenho do seu chatbot em tempo real</p>
+            </div>
+
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <div class="card-header">
+                        <span class="card-title">Chatbots Ativos</span>
+                        <div class="card-icon"><i class="fas fa-robot"></i></div>
+                    </div>
+                    <div class="card-value">0</div>
+                    <div class="card-change"><i class="fas fa-arrow-up"></i> 0 Criados hoje</div>
+                </div>
+                <div class="analytics-card">
+                    <div class="card-header">
+                        <span class="card-title">Conversas Hoje</span>
+                        <div class="card-icon"><i class="fas fa-comments"></i></div>
+                    </div>
+                    <div class="card-value">0</div>
+                    <div class="card-change"><i class="fas fa-arrow-up"></i> 0 Mensagens enviadas</div>
+                </div>
+                <div class="analytics-card">
+                    <div class="card-header">
+                        <span class="card-title">Taxa de Sucesso</span>
+                        <div class="card-icon"><i class="fas fa-check-circle"></i></div>
+                    </div>
+                    <div class="card-value">100%</div>
+                    <div class="card-change"><i class="fas fa-arrow-up"></i> Extração de dados</div>
+                </div>
+                <div class="analytics-card">
+                    <div class="card-header">
+                        <span class="card-title">Tempo Médio</span>
+                        <div class="card-icon"><i class="fas fa-clock"></i></div>
+                    </div>
+                    <div class="card-value">11m</div>
+                    <div class="card-change"><i class="fas fa-arrow-up"></i> Tempo de resposta</div>
+                </div>
+            </div>
+
+            <div class="chat-preview">
+                <div class="chat-header">
+                    <span class="chat-title">Preview do Chatbot</span>
+                </div>
+                <iframe id="chatbotFrame" src="about:blank" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
+
+            <div class="widget-generator">
+                <h3 class="widget-title"><i class="fas fa-code"></i> Gerador de Código do Widget</h3>
+                <p class="panel-subtitle">Copie e cole este código em qualquer página para integrar seu chatbot.</p>
+                <div class="code-block">
+                    <button class="copy-btn" id="copyWidgetCodeBtn"><i class="fas fa-copy"></i> Copiar</button>
+                    <pre><code id="widgetCodeDisplay">&lt;!-- LinkMágico Chatbot Widget --&gt;
+&lt;script&gt;
+    window.LinkMagicoWidgetConfig = {
+        robotName: "Assistente IA",
+        salesUrl: "",
+        instructions: "",
+        primaryColor: "#3b82f6"
+    };
+&lt;/script&gt;
+&lt;script src="/public/widget.js"&gt;&lt;/script&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="consent-modal" id="consentModal">
+        <div class="consent-backdrop"></div>
+        <div class="consent-content">
+            <div class="consent-header">
+                <h3>Preferências de Privacidade</h3>
+                <button class="close-btn" id="closeConsentModal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="consent-body">
+                <div class="consent-warning">
+                    <i class="fas fa-shield-alt"></i>
+                    <p>Para continuar usando o LinkMágico, precisamos do seu consentimento para processar dados pessoais conforme a LGPD.</p>
+                </div>
+                <div class="consent-details">
+                    <p>Usamos informações para:</p>
+                    <ul>
+                        <li>Personalizar respostas do chatbot</li>
+                        <li>Melhorar métricas e analytics</li>
+                        <li>Garantir segurança e prevenir fraudes</li>
+                    </ul>
+                    <div class="legal-basis">
+                        Base legal: Consentimento do titular (Art. 7º, LGPD).
+                    </div>
+                </div>
+                <div class="url-verification">
+                    <label>
+                        <input type="checkbox" id="urlResponsibilityCheckbox">
+                        Confiro que a URL informada é de minha responsabilidade
+                    </label>
+                    <p class="robots-check">Recomendado: verifique robots.txt e políticas de página antes de extrair dados.</p>
+                </div>
+                <div class="consent-footer">
+                    <button class="btn-secondary" id="rejectConsentBtn">Recusar</button>
+                    <button class="btn-primary-consent" id="acceptConsentBtn" disabled>Aceitar e Continuar</button>
+                </div>
+                <div class="consent-links">
+                    <a href="/privacy.html" target="_blank">Política de Privacidade</a>
+                    <a href="/excluir-dados" target="_blank">Excluir meus dados</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-times-circle' : 'fa-info-circle'}"></i><span>${message}</span>`;
+            toastContainer.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                toast.addEventListener('transitionend', () => toast.remove());
+            }, 5000);
+        }
+
+        const consentModal = document.getElementById('consentModal');
+        const lgpdBadge = document.getElementById('lgpdBadge');
+        const closeConsentModal = document.getElementById('closeConsentModal');
+        const urlResponsibilityCheckbox = document.getElementById('urlResponsibilityCheckbox');
+        const acceptConsentBtn = document.getElementById('acceptConsentBtn');
+        const rejectConsentBtn = document.getElementById('rejectConsentBtn');
+
+        lgpdBadge.addEventListener('click', () => {
+            consentModal.style.display = 'flex';
+        });
+
+        closeConsentModal.addEventListener('click', () => {
+            consentModal.style.display = 'none';
+        });
+
+        urlResponsibilityCheckbox.addEventListener('change', () => {
+            acceptConsentBtn.disabled = !urlResponsibilityCheckbox.checked;
+        });
+
+        rejectConsentBtn.addEventListener('click', () => {
+            showToast('Consentimento recusado. Algumas funcionalidades podem ser limitadas.', 'error');
+            consentModal.style.display = 'none';
+            // Implementar lógica para limitar funcionalidades ou redirecionar
+        });
+
+        acceptConsentBtn.addEventListener('click', () => {
+            if (urlResponsibilityCheckbox.checked) {
+                showToast('Consentimento aceito! Aproveite todas as funcionalidades.', 'success');
+                consentModal.style.display = 'none';
+                localStorage.setItem('lgpd_consent', 'accepted');
+            } else {
+                showToast('Por favor, confirme a responsabilidade da URL.', 'error');
+            }
+        });
+
+        // Verificar consentimento ao carregar a página
+        window.addEventListener('DOMContentLoaded', () => {
+            if (!localStorage.getItem('lgpd_consent')) {
+                consentModal.style.display = 'flex';
+            }
+        });
+
+        // Lógica do Chatbot
+        const robotNameInput = document.getElementById('robotName');
+        const salesUrlInput = document.getElementById('salesUrl');
+        const customInstructionsInput = document.getElementById('customInstructions');
+        const activateChatbotBtn = document.getElementById('activateChatbotBtn');
+        const chatbotFrame = document.getElementById('chatbotFrame');
+        const successAlert = document.getElementById('successAlert');
+        const widgetCodeDisplay = document.getElementById('widgetCodeDisplay');
+        const copyWidgetCodeBtn = document.getElementById('copyWidgetCodeBtn');
+
+        function showLoading() {
+            activateChatbotBtn.disabled = true;
+            activateChatbotBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Ativando...';
+        }
+
+        function hideLoading() {
+            activateChatbotBtn.disabled = false;
+            activateChatbotBtn.innerHTML = '<i class="fas fa-play-circle"></i> Ativar Chatbot Inteligente';
+        }
+
+        activateChatbotBtn.addEventListener('click', async () => {
+            const robotName = robotNameInput.value;
+            const salesUrl = salesUrlInput.value;
+            const customInstructions = customInstructionsInput.value;
+
+            if (!robotName || !salesUrl) {
+                showToast('Por favor, preencha o nome do assistente e a URL da página.', 'error');
+                return;
+            }
+
+            showLoading();
+
+            try {
+                const response = await fetch('/api/extract', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url: salesUrl, instructions: customInstructions, robotName: robotName })
+                });
+
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error(data.error || 'Erro desconhecido na extração.');
+                }
+
+                const chatbotParams = new URLSearchParams({
+                    url: salesUrl,
+                    name: robotName,
+                    instructions: customInstructions
+                });
+                
+                // Atualiza o iframe do chatbot
+                chatbotFrame.src = `/chat.html?${chatbotParams.toString()}`;
+
+                // Atualiza o código do widget
+                widgetCodeDisplay.innerHTML = `&lt;!-- LinkMágico Chatbot Widget --&gt;\n&lt;script&gt;\n    window.LinkMagicoWidgetConfig = {\n        robotName: "${robotName}",\n        salesUrl: "${salesUrl}",\n        instructions: "${customInstructions}",\n        primaryColor: "#3b82f6"\n    };\n&lt;/script&gt;\n&lt;script src="/public/widget.js"&gt;&lt;/script&gt;`;
+
+                successAlert.style.display = 'block';
+                showToast('Chatbot ativado com sucesso!', 'success');
+
+            } catch (error) {
+                console.error('Erro ao ativar chatbot:', error);
+                showToast(`Erro ao ativar chatbot: ${error.message || 'Servidor indisponível. Tente novamente em alguns minutos.'}`, 'error');
+            } finally {
+                hideLoading();
+            }
+        });
+
+        copyWidgetCodeBtn.addEventListener('click', () => {
+            const codeToCopy = widgetCodeDisplay.textContent;
+            navigator.clipboard.writeText(codeToCopy).then(() => {
+                showToast('Código do widget copiado!', 'success');
+            }).catch(err => {
+                console.error('Erro ao copiar código:', err);
+                showToast('Erro ao copiar código.', 'error');
+            });
+        });
+
+    </script>
+</body>
+</html>

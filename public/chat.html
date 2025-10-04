@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>LinkMágico Chatbot - Assistente IA</title>
+    <meta content="light dark" name="color-scheme"/>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a67d8;
+            --secondary: #764ba2;
+            --success: #10b981;
+            --error: #ef4444;
+            --white: #ffffff;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--gradient-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            line-height: 1.6;
+            color: var(--gray-800);
+        }
+        
+        /* Dark Mode Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .theme-toggle i {
+            color: var(--primary);
+            font-size: 1rem;
+        }
+        
+        /* Alert */
+        .alert {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1000;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: none;
+            max-width: 300px;
+        }
+        
+        .alert.success {
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+        
+        .alert.error {
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+        
+        /* Chat Container */
+        .chat-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: var(--shadow-xl);
+            width: 100%;
+            max-width: 800px;
+            height: 90vh;
+            max-height: 700px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .chat-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+        }
+        
+        /* Chat Header */
+        .chat-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 20px 25px;
+            position: relative;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .bot-avatar {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+        
+        .header-info h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+        
+        .header-info p {
+            opacity: 0.9;
+            font-size: 0.85rem;
+            font-weight: 400;
+        }
+        
+        .status-badge {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: rgba(255, 255, 255, 0.9);
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: #10b981;
+            border-radius: 50%;
+        }
+        
+        /* Product Info (apenas se houver dados) */
+        .product-info {
+            background: rgba(248, 250, 252, 0.95);
+            border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+            padding: 15px 25px;
+            display: none;
+        }
+        
+        .product-main {
+            flex: 1;
+        }
+        
+        .product-title {
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 4px;
+            font-size: 1rem;
+        }
+        
+        .product-price {
+            color: var(--success);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+        }
+        
+        .product-bonuses {
+            font-size: 0.8rem;
+            color: var(--gray-600);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .bonus-icon {
+            color: #f59e0b;
+        }
+        
+        /* Chat Messages */
+        .chat-messages {
+            flex: 1;
+            padding: 20px 25px;
+            overflow-y: auto;
+            background: linear-gradient(to bottom, var(--gray-50), white);
+            position: relative;
+        }
+        
+        .chat-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--gray-200);
+            border-radius: 2px;
+        }
+        
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-500);
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            animation: fadeInUp 0.3s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message.user {
+            justify-content: flex-end;
+            flex-direction: row-reverse;
+        }
+        
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .message.bot .message-avatar {
+            background: var(--gradient-primary);
+            color: white;
+        }
+        
+        .message.user .message-avatar {
+            background: var(--gradient-success);
+            color: white;
+        }
+        
+        .message-content {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+            white-space: pre-line;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+        
+        .message-content:hover {
+            box-shadow: var(--shadow-md);
+        }
+        
+        .message.user .message-content {
+            background: var(--gradient-primary);
+            color: white;
+        }
+        
+        .message.bot .message-content {
+            background: white;
+            color: var(--gray-800);
+            border: 1px solid var(--gray-200);
+        }
+        
+        /* CTA Links in messages */
+        .cta-link {
+            display: inline-block;
+            background: var(--gradient-success);
+            color: white !important;
+            padding: 8px 14px;
+            border-radius: 15px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .cta-link:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .cta-link i {
+            margin-left: 5px;
+        }
+        
+        /* Typing Indicator */
+        .typing-indicator {
+            display: none;
+            padding: 10px 25px;
+            color: var(--gray-600);
+            font-style: italic;
+            font-size: 0.85rem;
+        }
+        
+        .typing-dots {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            margin-left: 6px;
+        }
+        
+        .typing-dots span {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--primary);
+            animation: typing 1.2s infinite ease-in-out;
+        }
+        
+        .typing-dots span:nth-child(1) { animation-delay: -0.24s; }
+        .typing-dots span:nth-child(2) { animation-delay: -0.12s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0s; }
+        
+        @keyframes typing {
+            0%, 80%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+        
+        /* Chat Input */
+        .chat-input {
+            padding: 20px 25px;
+            background: white;
+            border-top: 1px solid var(--gray-200);
+            position: relative;
+        }
+        
+        .input-container {
+            position: relative;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        
+        .input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+        
+        .message-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--gray-200);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            resize: none;
+            transition: all 0.2s ease;
+            background: var(--gray-50);
+            font-family: inherit;
+            min-height: 44px;
+            max-height: 100px;
+        }
+        
+        .message-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: white;
+        }
+        
+        .message-input::placeholder {
+            color: var(--gray-500);
+        }
+        
+        .char-counter {
+            position: absolute;
+            bottom: -18px;
+            right: 0;
+            font-size: 0.7rem;
+            color: var(--gray-500);
+        }
+        
+        .char-counter.warning {
+            color: #f59e0b;
+        }
+        
+        .char-counter.error {
+            color: var(--error);
+        }
+        
+        .send-btn {
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-md);
+            flex-shrink: 0;
+        }
+        
+        .send-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .send-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .quick-action {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            color: var(--primary);
+            padding: 6px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .quick-action:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        /* Dark Mode */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+        }
+        
+        .dark-mode .chat-container {
+            background: rgba(31, 41, 55, 0.95);
+            border-color: rgba(75, 85, 99, 0.3);
+        }
+        
+        .dark-mode .product-info {
+            background: rgba(17, 24, 39, 0.95);
+            border-color: rgba(75, 85, 99, 0.3);
+        }
+        
+        .dark-mode .product-title {
+            color: var(--gray-200);
+        }
+        
+        .dark-mode .product-bonuses {
+            color: var(--gray-500);
+        }
+        
+        .dark-mode .chat-messages {
+            background: linear-gradient(to bottom, rgba(17, 24, 39, 0.8), rgba(31, 41, 55, 0.8));
+        }
+        
+        .dark-mode .message.bot .message-content {
+            background: rgba(55, 65, 81, 0.9);
+            color: var(--gray-200);
+            border-color: rgba(75, 85, 99, 0.5);
+        }
+        
+        .dark-mode .chat-input {
+            background: rgba(17, 24, 39, 0.95);
+            border-color: rgba(75, 85, 99, 0.3);
+        }
+        
+        .dark-mode .message-input {
+            background: rgba(55, 65, 81, 0.5);
+            border-color: rgba(75, 85, 99, 0.5);
+            color: var(--gray-200);
+        }
+        
+        .dark-mode .message-input:focus {
+            background: rgba(55, 65, 81, 0.8);
+        }
+        
+        .dark-mode .theme-toggle {
+            background: rgba(17, 24, 39, 0.9);
+            border-color: rgba(75, 85, 99, 0.3);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 8px;
+            }
+            
+            .chat-container {
+                height: 100vh;
+                max-height: 100vh;
+                max-width: 100%;
+                border-radius: 0;
+            }
+            
+            .chat-header,
+            .product-info,
+            .chat-messages,
+            .chat-input {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .message-content {
+                max-width: 85%;
+            }
+            
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+            }
+            
+            .quick-actions {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-info h1 {
+                font-size: 1.1rem;
+            }
+            
+            .message-content {
+                max-width: 90%;
+                padding: 10px 12px;
+            }
+            
+            .chat-input {
+                padding: 15px;
+            }
+        }
+        
+        /* Utility Classes */
+        .hidden { display: none; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* High contrast mode */
+        @media (prefers-contrast: high) {
+            .message-content {
+                border: 2px solid currentColor;
+            }
+            
+            .send-btn,
+            .quick-action {
+                border: 2px solid currentColor;
+            }
+        }
+        
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle -->
+    <button id="darkToggle" class="theme-toggle" aria-label="Alternar modo escuro">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <!-- Alert -->
+    <div id="alert" class="alert"></div>
+
+    <!-- Chat Container -->
+    <div class="chat-container">
+        <!-- Chat Header -->
+        <div class="chat-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="bot-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="header-info">
+                        <h1 id="robotName">Assistente IA</h1>
+                        <p>Assistente Inteligente para Vendas</p>
+                    </div>
+                </div>
+                <div class="status-badge">
+                    <div class="status-dot"></div>
+                    <span>Online</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Info (só aparece se houver dados) -->
+        <div class="product-info" id="productInfo">
+            <div class="product-main">
+                <div class="product-title" id="productTitle"></div>
+                <div class="product-price" id="productPrice"></div>
+            </div>
+            <div class="product-bonuses" id="productBonuses">
+                <i class="fas fa-gift bonus-icon"></i>
+                <span></span>
+            </div>
+        </div>
+
+        <!-- Chat Messages -->
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot fade-in">
+                <div class="message-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-content" id="welcomeMessage">
+                    Olá! Sou seu assistente especializado. Como posso te ajudar hoje?
+                </div>
+            </div>
+        </div>
+
+        <!-- Typing Indicator -->
+        <div class="typing-indicator" id="typingIndicator">
+            <i class="fas fa-robot"></i>
+            Assistente está digitando
+            <div class="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <!-- Chat Input -->
+        <div class="chat-input">
+            <div class="quick-actions" id="quickActions">
+                <button class="quick-action" onclick="sendQuickMessage('Como funciona?')">
+                    Como funciona?
+                </button>
+                <button class="quick-action" onclick="sendQuickMessage('Qual o preço?')">
+                    Qual o preço?
+                </button>
+                <button class="quick-action" onclick="sendQuickMessage('Tem garantia?')">
+                    Tem garantia?
+                </button>
+                <button class="quick-action" onclick="sendQuickMessage('Quero o link')">
+                    Quero o link
+                </button>
+            </div>
+            
+            <div class="input-group">
+                <div class="input-wrapper">
+                    <textarea 
+                        id="messageInput" 
+                        class="message-input" 
+                        placeholder="Digite sua pergunta..." 
+                        maxlength="500"
+                        rows="1"></textarea>
+                    <div class="char-counter" id="charCounter">0/500</div>
+                </div>
+                <button id="sendBtn" class="send-btn" onclick="sendMessage()" aria-label="Enviar mensagem">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let pageData = null;
+        let robotName = 'Assistente IA';
+        let conversationId = 'chat_' + Date.now();
+        let messageCount = 0;
+        const customInstructions = new URLSearchParams(window.location.search).get('instructions') || '';
+
+        // URL Parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const pageUrl = urlParams.get('url');
+        const robotNameParam = urlParams.get('name');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeChat();
+            setupEventListeners();
+            loadPageData();
+        });
+
+        function initializeChat() {
+            if (robotNameParam) {
+                robotName = robotNameParam;
+                document.getElementById('robotName').textContent = robotName;
+            }
+
+            // Auto-resize textarea
+            const messageInput = document.getElementById('messageInput');
+            messageInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+                
+                // Update character counter
+                const counter = document.getElementById('charCounter');
+                const length = this.value.length;
+                counter.textContent = `${length}/500`;
+                
+                if (length > 450) {
+                    counter.classList.add('error');
+                    counter.classList.remove('warning');
+                } else if (length > 400) {
+                    counter.classList.add('warning');
+                    counter.classList.remove('error');
+                } else {
+                    counter.classList.remove('warning', 'error');
+                }
+            });
+        }
+
+        function setupEventListeners() {
+            // Enter key to send message
+            document.getElementById('messageInput').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            // Dark mode toggle
+            const darkToggle = document.getElementById('darkToggle');
+            const savedTheme = localStorage.getItem('lm_theme');
+            
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                darkToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+
+            darkToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark-mode');
+                const isDark = document.body.classList.contains('dark-mode');
+                
+                this.innerHTML = isDark 
+                    ? '<i class="fas fa-sun"></i>' 
+                    : '<i class="fas fa-moon"></i>';
+                    
+                localStorage.setItem('lm_theme', isDark ? 'dark' : 'light');
+            });
+        }
+
+        async function loadPageData() {
+            if (!pageUrl) return;
+
+            try {
+                const response = await fetch('/extract', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        url: pageUrl, 
+                        instructions: customInstructions 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data && data.data) {
+                    pageData = data.data;
+                } else if (data) {
+                    pageData = data;
+                }
+                
+                if (pageData && customInstructions) {
+                    pageData.custom_instructions = customInstructions;
+                }
+                
+                updateProductInfo();
+                updateWelcomeMessage();
+                
+            } catch (error) {
+                console.error('Erro ao carregar dados da página:', error);
+                showAlert('Erro ao carregar dados da página', 'error');
+            }
+        }
+
+        function updateProductInfo() {
+            if (!pageData) return;
+
+            const productInfo = document.getElementById('productInfo');
+            const productTitle = document.getElementById('productTitle');
+            const productPrice = document.getElementById('productPrice');
+            const productBonuses = document.getElementById('productBonuses');
+
+            if (pageData.title) {
+                productTitle.textContent = pageData.title;
+                productInfo.style.display = 'block';
+            }
+
+            if (pageData.price) {
+                productPrice.textContent = pageData.price;
+            } else {
+                productPrice.textContent = 'Consulte o preço';
+            }
+
+            // Show bonuses if detected
+            if (pageData.bonuses_detected && pageData.bonuses_detected.length > 0) {
+                productBonuses.querySelector('span').textContent = 
+                    "Bônus detectados: " + pageData.bonuses_detected.join(", ");
+                productBonuses.style.display = 'flex';
+            }
+        }
+
+        function updateWelcomeMessage() {
+            if (!pageData) return;
+
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            const productName = pageData.title || 'este produto';
+            
+            welcomeMessage.textContent = 
+                `Olá! Sou o ${robotName}, seu assistente especializado em "${productName}". Como posso te ajudar hoje?`;
+        }
+
+        function addMessage(content, isUser = false, animate = true) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            if (animate) messageDiv.classList.add('fade-in');
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.innerHTML = isUser 
+                ? '<i class="fas fa-user"></i>' 
+                : '<i class="fas fa-robot"></i>';
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            
+            // Process content for CTA links
+            const processedContent = processMessageContent(content, isUser);
+            
+            if (typeof processedContent === 'string') {
+                contentDiv.textContent = processedContent;
+            } else {
+                contentDiv.appendChild(processedContent);
+            }
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(contentDiv);
+            messagesContainer.appendChild(messageDiv);
+            
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            messageCount++;
+            
+            // Update quick actions after few messages
+            if (messageCount > 1) updateQuickActions();
+        }
+
+        function processMessageContent(content, isUser) {
+            if (isUser) return content;
+
+            // Check for URLs and convert to CTA buttons
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            const urls = content.match(urlRegex);
+            
+            if (urls && urls.length > 0) {
+                const container = document.createElement('div');
+                let textContent = content;
+                
+                urls.forEach(url => {
+                    textContent = textContent.replace(url, '');
+                });
+                
+                // Add text content
+                if (textContent.trim()) {
+                    const textNode = document.createTextNode(textContent.trim());
+                    container.appendChild(textNode);
+                    container.appendChild(document.createElement('br'));
+                    container.appendChild(document.createElement('br'));
+                }
+                
+                // Add CTA buttons
+                urls.forEach(url => {
+                    const ctaLink = document.createElement('a');
+                    ctaLink.href = url;
+                    ctaLink.target = '_blank';
+                    ctaLink.rel = 'noopener noreferrer';
+                    ctaLink.className = 'cta-link';
+                    ctaLink.innerHTML = 'Quero me inscrever agora <i class="fas fa-external-link-alt"></i>';
+                    container.appendChild(ctaLink);
+                });
+                
+                return container;
+            }
+            
+            return content;
+        }
+
+        function updateQuickActions() {
+            const quickActions = document.getElementById('quickActions');
+            const newActions = [
+                'Tem desconto?',
+                'Quanto tempo de acesso?',
+                'Como comprar?',
+                'Aceita cartão?'
+            ];
+
+            quickActions.innerHTML = '';
+            newActions.forEach(action => {
+                const button = document.createElement('button');
+                button.className = 'quick-action';
+                button.textContent = action;
+                button.onclick = () => sendQuickMessage(action);
+                quickActions.appendChild(button);
+            });
+        }
+
+        function sendQuickMessage(message) {
+            document.getElementById('messageInput').value = message;
+            sendMessage();
+        }
+
+        function showTyping() {
+            document.getElementById('typingIndicator').style.display = 'block';
+        }
+
+        function hideTyping() {
+            document.getElementById('typingIndicator').style.display = 'none';
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Disable send button
+            const sendBtn = document.getElementById('sendBtn');
+            sendBtn.disabled = true;
+            
+            addMessage(message, true);
+            input.value = '';
+            input.style.height = 'auto';
+            
+            // Reset character counter
+            document.getElementById('charCounter').textContent = '0/500';
+            document.getElementById('charCounter').classList.remove('warning', 'error');
+            
+            showTyping();
+            
+            try {
+                const response = await fetch('/api/chat-universal', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: message,
+                        pageData: pageData,
+                        robotName: robotName,
+                        conversationId: conversationId,
+                        instructions: customInstructions
+                    })
+                });
+                
+                const data = await response.json();
+                hideTyping();
+                
+                if (data.success) {
+                    let botReply = data.response;
+
+                    // Include bonuses if detected
+                    if (data.bonuses_detected && data.bonuses_detected.length > 0) {
+                        botReply += "\n\nBônus inclusos: " + 
+                                    data.bonuses_detected.slice(0, 3).join(", ");
+                    }
+
+                    addMessage(botReply);
+                } else {
+                    addMessage('Desculpe, ocorreu um erro. Tente novamente.');
+                    showAlert('Erro ao processar mensagem', 'error');
+                }
+            } catch (error) {
+                hideTyping();
+                showAlert('Erro de conexão. Verifique sua internet.', 'error');
+                addMessage('Erro de conexão. Verifique sua internet e tente novamente.');
+            } finally {
+                sendBtn.disabled = false;
+            }
+        }
+
+        function showAlert(message, type = 'success') {
+            const alert = document.getElementById('alert');
+            alert.className = `alert ${type}`;
+            alert.textContent = message;
+            alert.style.display = 'block';
+            
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 4000);
+        }
+
+        // Handle visibility changes
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                document.body.style.animationPlayState = 'paused';
+            } else {
+                document.body.style.animationPlayState = 'running';
+            }
+        });
+
+        // Auto-scroll to bottom when new messages arrive
+        function scrollToBottom(smooth = true) {
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.scrollTo({
+                top: messagesContainer.scrollHeight,
+                behavior: smooth ? 'smooth' : 'auto'
+            });
+        }
+
+        // Enhanced error handling
+        window.addEventListener('error', function(e) {
+            console.error('Chat error:', e.error);
+            showAlert('Ocorreu um erro inesperado', 'error');
+        });
+    </script>
+</body>
+</html>
+        

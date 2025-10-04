@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validação de API Key - LinkMágico</title>
+    <meta name="description" content="Validação de API Key para acesso ao LinkMágico">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .validation-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .logo {
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            color: #64748b;
+            font-size: 0.95rem;
+            font-weight: 400;
+        }
+
+        .welcome-text {
+            margin-bottom: 30px;
+        }
+
+        .welcome-text h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+
+        .welcome-text p {
+            color: #64748b;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        .input-container i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 1rem;
+        }
+
+        .api-key-input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: #ffffff;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .api-key-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .api-key-input.error {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-button:active {
+            transform: translateY(0);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            display: none;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        .error-message i {
+            margin-right: 8px;
+        }
+
+        .help-text {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .help-text p {
+            color: #6b7280;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .help-text a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .help-text a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .validation-container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+
+            .logo h1 {
+                font-size: 1.75rem;
+            }
+
+            .welcome-text h2 {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="validation-container">
+        <div class="logo">
+            <h1>LinkMágico</h1>
+            <p>Plataforma de IA Conversacional</p>
+        </div>
+
+        <div class="welcome-text">
+            <h2>Bem-vindo ao LinkMágico!</h2>
+            <p>Para continuar, por favor insira sua API Key. Esta chave garante acesso seguro e personalizado às funcionalidades da plataforma.</p>
+        </div>
+
+        <form id="apiKeyForm">
+            <div class="form-group">
+                <label for="apiKey">API Key</label>
+                <div class="input-container">
+                    <i class="fas fa-key"></i>
+                    <input 
+                        type="text" 
+                        id="apiKey" 
+                        name="apiKey" 
+                        class="api-key-input" 
+                        placeholder="Sua API Key"
+                        required
+                        autocomplete="off"
+                    >
+                </div>
+            </div>
+
+            <button type="submit" class="submit-button" id="submitButton">
+                <span class="loading-spinner" id="loadingSpinner"></span>
+                <span id="buttonText">Acessar Plataforma</span>
+            </button>
+
+            <div class="error-message" id="errorMessage">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span id="errorText"></span>
+            </div>
+        </form>
+
+        <div class="help-text">
+            <p>
+                Não possui uma API Key? 
+                <a href="mailto:suporte@linkmagico.com">Entre em contato</a> 
+                para obter acesso à plataforma.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('apiKeyForm');
+            const apiKeyInput = document.getElementById('apiKey');
+            const submitButton = document.getElementById('submitButton');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const buttonText = document.getElementById('buttonText');
+            const errorMessage = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+
+            // Focus no input ao carregar a página
+            apiKeyInput.focus();
+
+            // Limpar erro quando o usuário digitar
+            apiKeyInput.addEventListener('input', function() {
+                hideError();
+                apiKeyInput.classList.remove('error');
+            });
+
+            // Submissão do formulário
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const apiKey = apiKeyInput.value.trim();
+                
+                if (!apiKey) {
+                    showError('Por favor, insira sua API Key.');
+                    apiKeyInput.classList.add('error');
+                    apiKeyInput.focus();
+                    return;
+                }
+
+                // Mostrar loading
+                setLoading(true);
+                hideError();
+
+                try {
+                    const response = await fetch('/validate-api-key', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ apiKey: apiKey }),
+                        credentials: 'include'
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        // Sucesso - redirecionar para a aplicação principal
+                        window.location.href = '/app';
+                    } else {
+                        // Erro de validação
+                        showError(data.error || 'API Key inválida. Verifique e tente novamente.');
+                        apiKeyInput.classList.add('error');
+                        apiKeyInput.focus();
+                        apiKeyInput.select();
+                    }
+                } catch (error) {
+                    console.error('Erro na validação:', error);
+                    showError('Erro de conexão. Verifique sua internet e tente novamente.');
+                } finally {
+                    setLoading(false);
+                }
+            });
+
+            function setLoading(loading) {
+                if (loading) {
+                    submitButton.disabled = true;
+                    loadingSpinner.style.display = 'inline-block';
+                    buttonText.textContent = 'Validando...';
+                } else {
+                    submitButton.disabled = false;
+                    loadingSpinner.style.display = 'none';
+                    buttonText.textContent = 'Acessar Plataforma';
+                }
+            }
+
+            function showError(message) {
+                errorText.textContent = message;
+                errorMessage.style.display = 'block';
+            }
+
+            function hideError() {
+                errorMessage.style.display = 'none';
+            }
+
+            // Permitir Enter para submeter
+            apiKeyInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    form.dispatchEvent(new Event('submit'));
+                }
+            });
+        });
+    </script>
+</body>
+</html>

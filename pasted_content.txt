@@ -1,0 +1,111 @@
+Prompt para Desenvolvedor Sênior: Aprimoramento do Chatbot IA para Vendas em Larga Escala
+
+1. Introdução e Contexto do Projeto
+
+Este documento serve como um guia abrangente para um desenvolvedor sênior com vasta experiência (19+ anos, centenas de projetos de sucesso) no aprimoramento de um chatbot de inteligência artificial existente, o "LinkMágico Chatbot v5.0.1". O objetivo é transformar esta ferramenta em um chatbot vendedor profissional, capaz de operar em larga escala, com conversação altamente inteligente, persuasiva e emocional, e uma capacidade de extração de dados universal de qualquer página da web. É crucial que o projeto mantenha o layout visual e a lógica funcional dos botões existentes, ao mesmo tempo em que expande significativamente as funcionalidades de direcionamento para aplicativos móveis.
+
+O chatbot atual já possui módulos para extração de dados (limitado a páginas de vendas), análise de texto, banco de conhecimento, geração de respostas (com fallback para templates) e gerenciamento de cache. A base tecnológica é Python (Flask) para o backend e Node.js/JavaScript para o frontend (conforme inferido pela estrutura de arquivos e logs de deployment).
+
+2. Requisitos Essenciais e Melhorias
+
+2.1. Conversação Inteligente e Vendedora Profissional (Melhoria de 100%)
+
+O cerne desta atualização é a elevação da inteligência conversacional do chatbot a um nível de vendedor profissional. Isso implica que o chatbot deve ser capaz de:
+
+•
+Interação Humana e Emocional: As respostas devem ir além da mera informação, incorporando nuances emocionais, empatia e um tom de voz que ressoe com o usuário, construindo rapport e confiança. Deve ser capaz de detectar o sentimento do usuário e adaptar sua abordagem.
+
+•
+Persuasão e Motivação: Utilizar técnicas de copywriting e vendas para guiar o usuário através do funil de vendas. Isso inclui identificar objeções, apresentar soluções de forma convincente, destacar benefícios de forma impactante e criar um senso de urgência ou oportunidade quando apropriado.
+
+•
+Coerência e Contexto em Larga Escala: Manter um histórico de conversação robusto e utilizá-lo de forma eficaz para garantir que as respostas sejam sempre contextuais e coerentes, mesmo em interações longas e complexas. A capacidade de lidar com múltiplos usuários simultaneamente sem perda de contexto é fundamental.
+
+•
+Respostas Dinâmicas e Adaptativas: Gerar respostas que se adaptem dinamicamente às informações extraídas da web e ao perfil do usuário, evitando respostas genéricas ou repetitivas. A IA deve ser capaz de sintetizar informações complexas em linguagem clara e concisa.
+
+•
+Direcionamento para Ação (CTAs Inteligentes): Integrar chamadas para ação de forma natural e estratégica na conversa, direcionando o usuário para a compra, para o preenchimento de formulários, para o contato com um vendedor humano, ou para outras ações desejadas, sempre com base no contexto da conversa e no estágio do funil de vendas.
+
+•
+Integração com LLMs Avançados: Aprimorar a integração com Large Language Models (LLMs) para garantir a inteligência conversacional. Isso pode envolver a exploração de modelos mais avançados, técnicas de prompt engineering sofisticadas, ou a combinação de múltiplos LLMs para diferentes propósitos (ex: um para compreensão, outro para geração).
+
+2.2. Extração de Dados Universal de Qualquer Página da Web
+
+A capacidade de extração de dados deve ser drasticamente expandida para qualquer página da web, não se limitando a páginas de vendas ou a campos pré-definidos. O módulo de data_extractor.py e analyzer.py precisarão ser reestruturados para:
+
+•
+Universalidade e Adaptabilidade: Ser capaz de navegar, interpretar e extrair informações de qualquer tipo de página web (blogs, notícias, e-commerce, portfólios, documentos, etc.), independentemente de sua estrutura ou tecnologia subjacente (HTML, JavaScript dinâmico, SPAs).
+
+•
+Extração Abrangente: Capturar todas as informações relevantes, incluindo texto (artigos, descrições, comentários), imagens (URLs, descrições), vídeos (URLs, metadados), links internos e externos, dados de contato, informações de produtos/serviços (preço, características, especificações, avaliações), FAQs, depoimentos, e qualquer outro elemento que possa ser útil para a IA. A extração não deve se limitar a "título, preço, benefícios", mas sim a uma compreensão holística do conteúdo da página.
+
+•
+Resiliência a Medidas Anti-Scraping: Implementar ou integrar soluções que contornem eficazmente medidas anti-scraping avançadas, como Cloudflare, detecção de bots, CAPTCHAs, bloqueios de IP, etc. Isso pode envolver o uso de proxies rotativos, simulação de navegador real (headless browser), ou APIs de scraping especializadas que ofereçam essa funcionalidade.
+
+•
+Estruturação Inteligente dos Dados: As informações extraídas devem ser processadas e estruturadas de forma que a IA possa compreendê-las e utilizá-las de maneira eficaz. Isso pode envolver técnicas de NLP para sumarização, extração de entidades, classificação de texto e criação de um grafo de conhecimento interno.
+
+2.3. Manutenção do Layout e Lógica dos Botões Existentes
+
+É um requisito não negociável que o layout visual e a lógica funcional dos botões existentes sejam mantidos exatamente como estão. O desenvolvedor deve analisar os arquivos de frontend (HTML, CSS, JavaScript) e as imagens fornecidas para replicar fielmente a interface. Isso inclui:
+
+•
+Painel de Controle: O design e a funcionalidade do painel de administração devem ser preservados.
+
+•
+Botões de Redes Sociais e Outros: Os botões (WhatsApp, Telegram, Facebook, Instagram, LinkedIn, YouTube, Site) devem manter sua aparência, cores e posicionamento. A lógica de clique e redirecionamento deve ser aprimorada, conforme o próximo ponto.
+
+•
+Componentes Visuais: Qualquer outro componente visual da interface deve ser replicado com precisão.
+
+2.4. Direcionamento Multiplataforma para Botões de Redes Sociais
+
+Atualmente, os botões de redes sociais direcionam apenas para a versão web. A melhoria aqui é que esses botões devem ser capazes de direcionar também para os aplicativos nativos correspondentes, quando o usuário estiver em um dispositivo móvel. Isso requer:
+
+•
+Detecção de Plataforma: O frontend deve ser capaz de detectar se o usuário está acessando via desktop ou dispositivo móvel (iOS/Android).
+
+•
+Deep Linking/Universal Links: Implementar a lógica para utilizar deep links (para Android) e universal links (para iOS) que abram diretamente o aplicativo da rede social (ex: WhatsApp, Instagram) com o perfil ou chat pré-definido, se o aplicativo estiver instalado. Caso contrário, deve haver um fallback elegante para a versão web.
+
+•
+Configuração Flexível: A capacidade de configurar os links para web e aplicativo deve ser intuitiva no painel de controle.
+
+3. Estrutura do Projeto e Tecnologias (Base Existente)
+
+O projeto atual é composto por:
+
+•
+Backend (Python/Flask): api_server.py, data_extractor.py, analyzer.py, knowledge_base_simple.py, response_generator.py, precision_optimizer.py, cache_manager.py, requirements.txt, Procfile.
+
+•
+Frontend (HTML/JavaScript/CSS): Arquivos na pasta upload/ (ex: chatbot.html).
+
+O desenvolvedor deve se basear nesta estrutura, refatorando e expandindo os módulos existentes conforme necessário para atender aos novos requisitos. A comunicação entre frontend e backend deve ser via API RESTful.
+
+4. Considerações Adicionais
+
+•
+Performance e Escalabilidade: A solução deve ser otimizada para alta performance e escalabilidade, suportando um grande volume de interações e extrações de dados.
+
+•
+Segurança: Implementar as melhores práticas de segurança para proteger dados de usuários e garantir a integridade do sistema.
+
+•
+Documentação: O código deve ser limpo, bem comentado e acompanhado de documentação técnica clara para facilitar futuras manutenções e evoluções.
+
+•
+Testes: Implementar testes unitários e de integração para garantir a robustez e a confiabilidade das novas funcionalidades.
+
+5. Recursos Fornecidos
+
+O desenvolvedor terá acesso aos seguintes recursos para auxiliar no projeto:
+
+•
+Arquivo ZIP do Chatbot Atual: Contém todo o código-fonte da versão 5.0.1 (link_magico_chatbot_v5.0.1_final.zip).
+
+•
+Capturas de Tela: Imagens detalhadas da interface atual do chatbot, mostrando o layout, os botões e as cores (image.png e outros anexos visuais).
+
+Este prompt visa fornecer uma visão clara e abrangente dos requisitos para transformar o chatbot existente em uma ferramenta de vendas IA de ponta. A expertise do desenvolvedor será fundamental para traduzir esses requisitos em uma solução técnica robusta e eficaz.

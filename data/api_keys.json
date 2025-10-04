@@ -1,0 +1,14 @@
+{
+  "demo-key-123": {
+    "nome": "Cliente Demo",
+    "plano": "basic",
+    "active": true,
+    "created_at": "2024-01-01T00:00:00Z"
+  },
+  "test-key-456": {
+    "nome": "Cliente Teste",
+    "plano": "premium",
+    "active": true,
+    "created_at": "2024-01-01T00:00:00Z"
+  }
+}

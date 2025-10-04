@@ -1,0 +1,724 @@
+<!-- Modal de Consentimento LGPD -->
+<div id="consentModal" class="consent-modal" style="display: none;">
+    <div class="consent-backdrop"></div>
+    <div class="consent-content">
+        <div class="consent-header">
+            <h3>🛡️ Consentimento para Extração de Dados</h3>
+            <button class="close-btn" onclick="closeConsentModal()" type="button">&times;</button>
+        </div>
+        
+        <div class="consent-body">
+            <div class="consent-warning">
+                <i class="fas fa-info-circle"></i>
+                <p>Para criar seu chatbot, precisamos extrair e processar informações públicas da URL fornecida.</p>
+            </div>
+            
+            <div class="consent-details">
+                <h4>O que será extraído:</h4>
+                <ul>
+                    <li>Conteúdo de texto público da página</li>
+                    <li>Estrutura e dados visíveis ao usuário</li>
+                    <li>Informações de produtos/serviços descritos</li>
+                    <li>Metadados básicos (título, descrição)</li>
+                </ul>
+                
+                <h4>Como usamos os dados:</h4>
+                <ul>
+                    <li>Exclusivamente para treinar seu chatbot personalizado</li>
+                    <li>Processamento temporário (dados não são armazenados permanentemente)</li>
+                    <li>Não compartilhamos com terceiros</li>
+                    <li>Verificamos automaticamente o robots.txt antes da extração</li>
+                </ul>
+                
+                <h4>Seus direitos:</h4>
+                <ul>
+                    <li>Solicitar exclusão dos dados processados</li>
+                    <li>Contestar o processamento</li>
+                    <li>Acessar dados coletados sobre você</li>
+                    <li>Revogar este consentimento a qualquer momento</li>
+                </ul>
+                
+                <div class="legal-basis">
+                    <strong>Base legal:</strong> Consentimento (Art. 7º, inciso I, LGPD)<br>
+                    <strong>Finalidade:</strong> Criação de chatbot personalizado<br>
+                    <strong>Retenção:</strong> Processamento temporário
+                </div>
+            </div>
+            
+            <div class="url-verification">
+                <label>
+                    <input type="checkbox" id="urlOwnershipCheck" required>
+                    Confirmo que sou proprietário/autorizado a processar conteúdo desta URL
+                </label>
+            </div>
+            
+            <div class="robots-check">
+                <p><small>✓ Verificamos automaticamente o robots.txt antes da extração</small></p>
+            </div>
+        </div>
+        
+        <div class="consent-footer">
+            <button class="btn-secondary" onclick="closeConsentModal()" type="button">
+                Cancelar
+            </button>
+            <button class="btn-primary" id="consentBtn" onclick="grantConsent()" disabled type="button">
+                <i class="fas fa-check"></i>
+                Autorizo a Extração
+            </button>
+        </div>
+        
+        <div class="legal-links">
+            <a href="/privacy" target="_blank">Política de Privacidade</a> | 
+            <a href="/terms" target="_blank">Termos de Uso</a> | 
+            <a href="/data-deletion" target="_blank">Exclusão de Dados</a>
+        </div>
+    </div>
+</div>
+
+<style>
+.consent-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.consent-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+}
+
+.consent-content {
+    position: relative;
+    background: rgba(30, 41, 59, 0.95);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 20px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 85vh;
+    overflow-y: auto;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+    color: #f8fafc;
+}
+
+.consent-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    border-radius: 20px 20px 0 0;
+}
+
+.consent-header h3 {
+    color: white;
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.consent-body {
+    padding: 1.5rem;
+}
+
+.consent-warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    background: rgba(59, 130, 246, 0.1);
+    padding: 1rem;
+    border-radius: 10px;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    margin-bottom: 1.5rem;
+}
+
+.consent-warning i {
+    color: #3b82f6;
+    margin-top: 0.2rem;
+    flex-shrink: 0;
+}
+
+.consent-warning p {
+    color: #f8fafc;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.consent-details {
+    color: #cbd5e1;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.consent-details h4 {
+    color: #f8fafc;
+    margin: 1rem 0 0.5rem 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.consent-details ul {
+    margin: 0 0 1rem 1.5rem;
+    padding: 0;
+}
+
+.consent-details li {
+    margin-bottom: 0.3rem;
+}
+
+.legal-basis {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 8px;
+    padding: 0.75rem;
+    margin: 1rem 0;
+    font-size: 0.8rem;
+    color: #cbd5e1;
+}
+
+.url-verification {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.url-verification label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    color: #f8fafc;
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.url-verification input[type="checkbox"] {
+    margin-top: 0.2rem;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.robots-check {
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.robots-check small {
+    color: #94a3b8;
+    font-size: 0.75rem;
+}
+
+.consent-footer {
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-top: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.btn-secondary {
+    flex: 1;
+    padding: 0.75rem;
+    background: transparent;
+    border: 2px solid #334155;
+    color: #f8fafc;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.btn-secondary:hover {
+    background: #334155;
+}
+
+.btn-primary {
+    flex: 2;
+    padding: 0.75rem;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    border: none;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+.legal-links {
+    text-align: center;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid rgba(148, 163, 184, 0.2);
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 0 0 20px 20px;
+}
+
+.legal-links a {
+    color: #60a5fa;
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: color 0.2s;
+}
+
+.legal-links a:hover {
+    color: #3b82f6;
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .consent-content {
+        width: 95%;
+        max-height: 90vh;
+    }
+    
+    .consent-header,
+    .consent-body,
+    .consent-footer {
+        padding: 1rem;
+    }
+    
+    .consent-footer {
+        flex-direction: column;
+    }
+}
+</style>
+
+<script>
+// Gerenciamento do modal de consentimento
+let consentGranted = false;
+let pendingExtractionData = null;
+
+function showConsentModal(robotName, salesUrl, customInstructions) {
+    // Armazena dados para usar após consentimento
+    pendingExtractionData = { robotName, salesUrl, customInstructions };
+    
+    // Atualiza informações no modal
+    const warningElement = document.querySelector('.consent-warning p');
+    if (warningElement && robotName && salesUrl) {
+        warningElement.innerHTML = `Para criar seu chatbot <strong>"${robotName}"</strong>, precisamos extrair e processar informações públicas da URL:<br><code style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; font-size: 0.8rem;">${salesUrl}</code>`;
+    }
+    
+    // Verifica domínios sensíveis
+    checkSensitiveDomain(salesUrl);
+    
+    // Mostra modal
+    document.getElementById('consentModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    
+    // Foco no primeiro elemento interativo
+    setTimeout(() => {
+        const checkbox = document.getElementById('urlOwnershipCheck');
+        if (checkbox) checkbox.focus();
+    }, 100);
+}
+
+function closeConsentModal() {
+    document.getElementById('consentModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+    pendingExtractionData = null;
+}
+
+function checkSensitiveDomain(url) {
+    const sensitivePatterns = [
+        /\.gov\./i, /\.edu\./i, /healthcare/i, /medical/i, 
+        /hospital/i, /bank/i, /financial/i, /governo/i,
+        /saude/i, /educacao/i, /ministerio/i
+    ];
+    
+    const isSensitive = sensitivePatterns.some(pattern => pattern.test(url));
+    
+    if (isSensitive) {
+        const warningDiv = document.querySelector('.consent-warning');
+        if (warningDiv) {
+            warningDiv.style.background = 'rgba(245, 158, 11, 0.1)';
+            warningDiv.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+            warningDiv.innerHTML = `
+                <i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i>
+                <div>
+                    <p><strong>Domínio Sensível Detectado</strong></p>
+                    <p>Esta URL parece ser de um domínio sensível (governamental, educacional, saúde, etc.). 
+                    Certifique-se de ter autorização explícita para extrair dados deste site.</p>
+                </div>
+            `;
+        }
+    }
+}
+
+async function grantConsent() {
+    const checkbox = document.getElementById('urlOwnershipCheck');
+    if (!checkbox.checked) {
+        alert('Por favor, confirme que possui autorização para processar esta URL.');
+        return;
+    }
+    
+    if (!pendingExtractionData) {
+        alert('Erro: dados de extração não encontrados.');
+        return;
+    }
+    
+    const { robotName, salesUrl, customInstructions } = pendingExtractionData;
+    
+    try {
+        // 1. Registra consentimento no servidor
+        const consentData = {
+            timestamp: new Date().toISOString(),
+            url: salesUrl,
+            robotName: robotName,
+            instructions: customInstructions,
+            userAgent: navigator.userAgent,
+            consent: true,
+            version: '1.0',
+            legalBasis: 'consent',
+            purpose: 'chatbot_creation'
+        };
+        
+        const consentResponse = await fetch('/api/log-consent', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(consentData)
+        });
+        
+        if (!consentResponse.ok) {
+            throw new Error('Falha ao registrar consentimento');
+        }
+        
+        const consentResult = await consentResponse.json();
+        console.log('Consentimento registrado:', consentResult.consentId);
+        
+        // 2. Salva consentimento localmente também
+        localStorage.setItem('linkmagico_consent', JSON.stringify({
+            ...consentData,
+            consentId: consentResult.consentId,
+            expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 dias
+        }));
+        
+        // 3. Fecha modal e continua com extração
+        consentGranted = true;
+        closeConsentModal();
+        
+        // 4. Processa extração
+        await proceedWithExtraction();
+        
+    } catch (error) {
+        console.error('Erro no processo de consentimento:', error);
+        alert('Erro ao processar consentimento: ' + (error.message || 'Erro desconhecido. Tente novamente.'));
+    }
+}
+
+async function proceedWithExtraction() {
+    if (!pendingExtractionData) {
+        console.error('Dados de extração não disponíveis');
+        return;
+    }
+    
+    const { robotName, salesUrl, customInstructions } = pendingExtractionData;
+    
+    // Show loading
+    const loading = document.getElementById('loading');
+    const spinner = loading?.querySelector('.spinner');
+    const typingIndicator = document.getElementById('typingIndicator');
+    const result = document.getElementById('result');
+    
+    if (loading) loading.style.display = 'block';
+    if (spinner) spinner.classList.add('active');
+    if (typingIndicator) typingIndicator.style.display = 'block';
+    if (result) result.style.display = 'none';
+    
+    try {
+        // Chama API de extração com consentimento
+        const response = await fetch("/extract", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                url: salesUrl,
+                instructions: customInstructions,
+                robotName: robotName,
+                consentGranted: true
+            })
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const extractData = await response.json();
+        
+        if (!extractData.success && !extractData.data) {
+            throw new Error(extractData.error || 'Erro ao extrair dados da página');
+        }
+        
+        // Atualiza variáveis globais se existirem
+        if (typeof window !== 'undefined') {
+            if (typeof extractedPageData !== 'undefined') {
+                extractedPageData = extractData.data || extractData;
+            }
+            if (typeof currentChatbotUrl !== 'undefined') {
+                // Generate chatbot URL
+                const chatbotParams = new URLSearchParams({
+                    url: salesUrl,
+                    name: robotName,
+                    instructions: customInstructions
+                });
+                currentChatbotUrl = `/chat.html?${chatbotParams.toString()}`;
+            }
+        }
+        
+        // Hide loading
+        if (loading) loading.style.display = 'none';
+        if (spinner) spinner.classList.remove('active');
+        if (typingIndicator) typingIndicator.style.display = 'none';
+        
+        // Show result
+        if (result) result.style.display = 'block';
+        
+        const successMessage = document.getElementById('successMessage');
+        if (successMessage) successMessage.style.display = 'block';
+        
+        const extractedSummary = document.getElementById('extractedSummary');
+        if (extractedSummary) {
+            const data = extractData.data || extractData;
+            extractedSummary.innerHTML = `<strong>Resumo:</strong> ${data.summary || data.title || 'Dados extraídos com sucesso'}`;
+        }
+        
+        const extractedData = document.getElementById('extractedData');
+        if (extractedData) extractedData.style.display = 'block';
+        
+        // Configure chatbot link
+        const chatbotLink = document.getElementById('chatbotLink');
+        if (chatbotLink && typeof currentChatbotUrl !== 'undefined') {
+            chatbotLink.href = currentChatbotUrl;
+            chatbotLink.textContent = "Clique aqui para acessar seu chatbot";
+        }
+        
+        // Update analytics if function exists
+        if (typeof updateAnalytics === 'function') {
+            if (typeof botCount !== 'undefined') botCount++;
+            updateAnalytics();
+        }
+        
+        // Update widget code if function exists
+        if (typeof updateWidgetCode === 'function') {
+            updateWidgetCode(robotName, salesUrl, customInstructions);
+        }
+        
+        // Open chatbot in new tab
+        if (typeof currentChatbotUrl !== 'undefined') {
+            window.open(currentChatbotUrl, "_blank");
+        }
+        
+    } catch (error) {
+        console.error('Erro ao criar chatbot:', error);
+        
+        // Hide loading
+        if (loading) loading.style.display = 'none';
+        if (spinner) spinner.classList.remove('active');
+        if (typingIndicator) typingIndicator.style.display = 'none';
+        
+        let errorMessage = 'Erro ao criar chatbot: ';
+        
+        if (error.message.includes('não permitida') || error.message.includes('robots.txt')) {
+            errorMessage += 'O robots.txt deste site não permite extração de dados.';
+        } else if (error.message.includes('403')) {
+            errorMessage += 'Acesso negado. Verifique se o site permite extração de dados.';
+        } else if (error.message.includes('rate limit') || error.message.includes('429')) {
+            errorMessage += 'Muitas tentativas. Aguarde alguns minutos antes de tentar novamente.';
+        } else if (error.message.includes('fetch') || error.message.includes('network')) {
+            errorMessage += 'Problema de conexão. Verifique sua internet.';
+        } else if (error.message.includes('HTTP')) {
+            errorMessage += 'Servidor indisponível. Tente novamente em alguns minutos.';
+        } else {
+            errorMessage += error.message;
+        }
+        
+        alert(errorMessage);
+    }
+}
+
+// Verificar se usuário já deu consentimento anteriormente
+function checkPreviousConsent(url) {
+    const savedConsent = localStorage.getItem('linkmagico_consent');
+    if (savedConsent) {
+        try {
+            const consentData = JSON.parse(savedConsent);
+            const consentDate = new Date(consentData.timestamp);
+            const expiryDate = consentData.expiresAt ? new Date(consentData.expiresAt) : new Date(consentDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+            const now = new Date();
+            
+            // Verifica se consentimento ainda é válido
+            if (now < expiryDate && consentData.consent === true) {
+                // Opcionalmente, verificar se é para o mesmo domínio
+                if (url && consentData.url) {
+                    try {
+                        const savedDomain = new URL(consentData.url).hostname;
+                        const currentDomain = new URL(url).hostname;
+                        if (savedDomain === currentDomain) {
+                            console.log('Consentimento anterior válido para este domínio');
+                            return true;
+                        }
+                    } catch (e) {
+                        // Erro ao comparar domínios, trata como novo consentimento
+                    }
+                }
+                
+                console.log('Consentimento anterior ainda válido');
+                return true;
+            } else {
+                // Remove consentimento expirado
+                localStorage.removeItem('linkmagico_consent');
+            }
+        } catch (error) {
+            console.error('Erro ao verificar consentimento anterior:', error);
+            localStorage.removeItem('linkmagico_consent');
+        }
+    }
+    return false;
+}
+
+// Função para revogar consentimento
+function revokeConsent() {
+    localStorage.removeItem('linkmagico_consent');
+    
+    // Notifica o servidor sobre a revogação
+    fetch('/api/revoke-consent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            timestamp: new Date().toISOString(),
+            action: 'revoke'
+        })
+    }).catch(console.error);
+    
+    alert('Consentimento revogado com sucesso. Você precisará dar consentimento novamente para usar o serviço.');
+}
+
+// Inicialização quando o DOM carregar
+document.addEventListener('DOMContentLoaded', function() {
+    // Checkbox listener para habilitar botão no modal
+    const checkbox = document.getElementById('urlOwnershipCheck');
+    const consentBtn = document.getElementById('consentBtn');
+    
+    if (checkbox && consentBtn) {
+        checkbox.addEventListener('change', function() {
+            consentBtn.disabled = !this.checked;
+        });
+    }
+    
+    // Event listeners para fechar modal
+    const modal = document.getElementById('consentModal');
+    if (modal) {
+        // Fechar ao clicar no backdrop
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal || e.target.classList.contains('consent-backdrop')) {
+                closeConsentModal();
+            }
+        });
+        
+        // Fechar com ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.style.display === 'flex') {
+                closeConsentModal();
+            }
+        });
+    }
+    
+    // Adiciona link de revogação de consentimento se existir consentimento válido
+    if (checkPreviousConsent()) {
+        addConsentRevocationLink();
+    }
+});
+
+// Adicionar link para revogar consentimento
+function addConsentRevocationLink() {
+    const existingLink = document.getElementById('revoke-consent-link');
+    if (existingLink) return;
+    
+    const footer = document.createElement('div');
+    footer.id = 'revoke-consent-link';
+    footer.style.cssText = `
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        background: rgba(30, 41, 59, 0.9);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        border-radius: 12px;
+        padding: 0.5rem 0.75rem;
+        backdrop-filter: blur(20px);
+        font-size: 0.75rem;
+        z-index: 1000;
+        color: #cbd5e1;
+    `;
+    
+    footer.innerHTML = `
+        <button onclick="revokeConsent()" style="background: none; border: none; color: #60a5fa; cursor: pointer; text-decoration: underline; font-size: 0.75rem; padding: 0;">
+            Revogar consentimento
+        </button>
+    `;
+    
+    document.body.appendChild(footer);
+}
+
+// Exposar funções globalmente para uso em outros scripts
+window.ConsentManager = {
+    showConsentModal,
+    closeConsentModal,
+    grantConsent,
+    checkPreviousConsent,
+    revokeConsent,
+    proceedWithExtraction
+};
+</script>

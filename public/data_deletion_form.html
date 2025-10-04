@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exclusão de Dados - LinkMágico v6.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --dark: #0f172a;
+            --dark-surface: #1e293b;
+            --dark-elevated: #334155;
+            --dark-text: #f8fafc;
+            --dark-text-secondary: #cbd5e1;
+            --dark-text-muted: #94a3b8;
+            --glass-bg: rgba(30, 41, 59, 0.8);
+            --glass-border: rgba(148, 163, 184, 0.2);
+            --gradient-bg: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--gradient-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .header h1 {
+            color: var(--dark-text);
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+        
+        .header p {
+            color: var(--dark-text-secondary);
+            font-size: 1rem;
+        }
+        
+        .form-container {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .warning-box {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .warning-icon {
+            color: var(--warning);
+            font-size: 1.2rem;
+            margin-top: 0.2rem;
+            flex-shrink: 0;
+        }
+        
+        .warning-content h3 {
+            color: var(--warning);
+            margin: 0 0 0.5rem 0;
+            font-size: 1rem;
+        }
+        
+        .warning-content p {
+            color: var(--dark-text-secondary);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        
+        .form-section {
+            margin-bottom: 2rem;
+        }
+        
+        .form-section h3 {
+            color: var(--dark-text);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            color: var(--dark-text);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .form-label.required::after {
+            content: ' *';
+            color: var(--error);
+        }
+        
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--dark-elevated);
+            border-radius: 10px;
+            background: var(--dark-surface);
+            color: var(--dark-text);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: var(--dark-text-muted);
+        }
+        
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 10px;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            margin-top: 0.2rem;
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+        
+        .checkbox-group label {
+            color: var(--dark-text);
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin: 0;
+        }
+        
+        .data-types {
+            background: var(--dark-surface);
+            border: 1px solid var(--dark-elevated);
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .data-type {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--dark-elevated);
+        }
+        
+        .data-type:last-child {
+            border-bottom: none;
+        }
+        
+        .data-type input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .data-type label {
+            color: var(--dark-text-secondary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            margin: 0;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+        
+        .btn-cancel {
+            background: transparent;
+            border: 2px solid var(--dark-elevated);
+            color: var(--dark-text);
+        }
+        
+        .btn-cancel:hover {
+            background: var(--dark-surface);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, var(--error), #dc2626);
+            color: white;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(239, 68, 68, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--success);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            display: none;
+        }
+        
+        .success-message h4 {
+            margin: 0 0 0.5rem 0;
+            color: var(--success);
+        }
+        
+        .success-message p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        
+        .processing {
+            text-align: center;
+            padding: 2rem;
+            display: none;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--dark-elevated);
+            border-top: 3px solid var(--error);
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .help-text {
+            color: var(--dark-text-muted);
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+        
+        .contact-info {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            text-align: center;
+        }
+        
+        .contact-info h4 {
+            color: var(--primary);
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .contact-info p {
+            color: var(--dark-text-secondary);
+            margin: 0.25rem 0;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .form-container,
+            .header {
+                padding: 1.5rem;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            .warning-box {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗑️ Exclusão de Dados Pessoais</h1>
+            <p>Solicite a remoção completa dos seus dados conforme seus direitos na LGPD</p>
+        </div>
+        
+        <div class="form-container">
+            <div class="warning-box">
+                <div class="warning-icon">⚠️</div>
+                <div class="warning-content">
+                    <h3>Ação Irreversível</h3>
+                    <p>A exclusão dos dados resultará na remoção permanente de todos os chatbots criados e dados associados. Esta ação não pode ser desfeita.</p>
+                </div>
+            </div>
+            
+            <form id="deletionForm">
+                <div class="form-section">
+                    <h3>Identificação</h3>
+                    
+                    <div class="form-group">
+                        <label for="email" class="form-label required">E-mail</label>
+                        <input type="email" id="email" name="email" class="form-input" 
+                               placeholder="seu@email.com" required>
+                        <div class="help-text">E-mail utilizado para criar os chatbots</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="robotName" class="form-label">Nome do Assistente Virtual</label>
+                        <input type="text" id="robotName" name="robotName" class="form-input" 
+                               placeholder="@nome.do.bot (opcional)">
+                        <div class="help-text">Se lembrar do nome usado, ajuda na identificação</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="url" class="form-label">URL da Página</label>
+                        <input type="url" id="url" name="url" class="form-input" 
+                               placeholder="https://exemplo.com (opcional)">
+                        <div class="help-text">URL utilizada para criar o chatbot</div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3>Tipo de Solicitação</h3>
+                    
+                    <div class="form-group">
+                        <label for="requestType" class="form-label required">O que você deseja?</label>
+                        <select id="requestType" name="requestType" class="form-select" required>
+                            <option value="">Selecione uma opção</option>
+                            <option value="delete_all">Exclusão completa de todos os dados</option>
+                            <option value="delete_specific">Exclusão de dados específicos</option>
+                            <option value="access_data">Acesso aos meus dados (portabilidade)</option>
+                            <option value="correct_data">Correção de dados incorretos</option>
+                            <option value="revoke_consent">Revogação de consentimento</option>
+                        </select>
+                    </div>
+                    
+                    <div id="dataTypesSection" class="data-types" style="display: none;">
+                        <h4 style="color: var(--dark-text); margin-bottom: 1rem; font-size: 0.95rem;">Selecione os tipos de dados:</h4>
+                        
+                        <div class="data-type">
+                            <input type="checkbox" id="config_data" name="dataTypes" value="configuration">
+                            <label for="config_data">Dados de configuração (nome do bot, instruções)</label>
+                        </div>
+                        
+                        <div class="data-type">
+                            <input type="checkbox" id="extracted_data" name="dataTypes" value="extracted">
+                            <label for="extracted_data">Dados extraídos de URLs</label>
+                        </div>
+                        
+                        <div class="data-type">
+                            <input type="checkbox" id="access_logs" name="dataTypes" value="logs">
+                            <label for="access_logs">Logs de acesso e uso</label>
+                        </div>
+                        
+                        <div class="data-type">
+                            <input type="checkbox" id="consent_logs" name="dataTypes" value="consent">
+                            <label for="consent_logs">Registros de consentimento</label>
+                        </div>
+                        
+                        <div class="data-type">
+                            <input type="checkbox" id="analytics_data" name="dataTypes" value="analytics">
+                            <label for="analytics_data">Dados de analytics (anonimizados)</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3>Justificativa</h3>
+                    
+                    <div class="form-group">
+                        <label for="reason" class="form-label">Motivo da solicitação (opcional)</label>
+                        <textarea id="reason" name="reason" class="form-textarea" 
+                                  placeholder="Descreva o motivo da sua solicitação..."></textarea>
+                        <div class="help-text">Esta informação nos ajuda a melhorar nossos serviços</div>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="confirmDeletion" name="confirmDeletion" required>
+                    <label for="confirmDeletion">
+                        <strong>Confirmo que entendo</strong> que esta ação resultará na exclusão permanente dos dados solicitados e que não poderá ser desfeita. Estou ciente de que precisarei recriar meus chatbots caso deseje usar o serviço novamente.
+                    </label>
+                </div>
+                
+                <div class="buttons">
+                    <a href="/" class="btn btn-cancel">Cancelar</a>
+                    <button type="submit" class="btn btn-danger" id="submitBtn" disabled>
+                        Solicitar Exclusão
+                    </button>
+                </div>
+            </form>
+            
+            <div class="processing" id="processing">
+                <div class="spinner"></div>
+                <p>Processando solicitação...</p>
+            </div>
+            
+            <div class="success-message" id="successMessage">
+                <h4>✅ Solicitação Enviada</h4>
+                <p>Sua solicitação foi recebida e será processada em até 72 horas. Você receberá uma confirmação por e-mail quando concluída.</p>
+                <p><strong>Protocolo:</strong> <span id="protocolNumber"></span></p>
+            </div>
+            
+            <div class="contact-info">
+                <h4>📞 Precisa de Ajuda?</h4>
+                <p><strong>E-mail:</strong> dpo@linkmagico.com</p>
+                <p><strong>Telefone:</strong> +55 11 XXXXX-XXXX</p>
+                <p><strong>Atendimento:</strong> Segunda a sexta, 9h às 18h</p>
+                <p><strong>Prazo de resposta:</strong> Até 15 dias úteis</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Gerenciamento do formulário
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('deletionForm');
+            const requestType = document.getElementById('requestType');
+            const dataTypesSection = document.getElementById('dataTypesSection');
+            const confirmCheckbox = document.getElementById('confirmDeletion');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // Mostra/esconde seção de tipos de dados
+            requestType.addEventListener('change', function() {
+                if (this.value === 'delete_specific') {
+                    dataTypesSection.style.display = 'block';
+                } else {
+                    dataTypesSection.style.display = 'none';
+                }
+            });
+            
+            // Habilita/desabilita botão de submit
+            confirmCheckbox.addEventListener('change', function() {
+                submitBtn.disabled = !this.checked;
+            });
+            
+            // Submit do formulário
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Validações
+                const email = document.getElementById('email').value.trim();
+                const requestType = document.getElementById('requestType').value;
+                
+                if (!email || !requestType) {
+                    alert('Por favor, preencha todos os campos obrigatórios.');
+                    return;
+                }
+                
+                // Validação de e-mail
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    alert('Por favor, insira um e-mail válido.');
+                    return;
+                }
+                
+                // Se for exclusão específica, verifica se pelo menos um tipo foi selecionado
+                if (requestType === 'delete_specific') {
+                    const selectedTypes = document.querySelectorAll('input[name="dataTypes"]:checked');
+                    if (selectedTypes.length === 0) {
+                        alert('Por favor, selecione pelo menos um tipo de dados para exclusão.');
+                        return;
+                    }
+                }
+                
+                // Confirmação final
+                const confirmMessage = requestType === 'delete_all' ? 
+                    'Tem certeza que deseja excluir TODOS os seus dados? Esta ação não pode ser desfeita.' :
+                    'Tem certeza que deseja prosseguir com esta solicitação?';
+                    
+                if (!confirm(confirmMessage)) {
+                    return;
+                }
+                
+                // Mostra loading
+                document.getElementById('processing').style.display = 'block';
+                form.style.display = 'none';
+                
+                try {
+                    // Coleta dados do formulário
+                    const formData = {
+                        email: email,
+                        robotName: document.getElementById('robotName').value.trim(),
+                        url: document.getElementById('url').value.trim(),
+                        requestType: requestType,
+                        reason: document.getElementById('reason').value.trim(),
+                        timestamp: new Date().toISOString(),
+                        userAgent: navigator.userAgent,
+                        source: 'web_form'
+                    };
+                    
+                    // Se for exclusão específica, adiciona tipos selecionados
+                    if (requestType === 'delete_specific') {
+                        const selectedTypes = Array.from(document.querySelectorAll('input[name="dataTypes"]:checked'))
+                            .map(cb => cb.value);
+                        formData.dataTypes = selectedTypes;
+                    }
+                    
+                    // Envia solicitação
+                    const response = await fetch('/api/data-deletion', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (!response.ok || !result.success) {
+                        throw new Error(result.error || 'Erro ao processar solicitação');
+                    }
+                    
+                    // Sucesso
+                    document.getElementById('processing').style.display = 'none';
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('protocolNumber').textContent = result.requestId || 'N/A';
+                    
+                    // Log local para referência
+                    localStorage.setItem('linkmagico_deletion_request', JSON.stringify({
+                        ...formData,
+                        status: 'submitted',
+                        protocol: result.requestId,
+                        submissionTime: new Date().toISOString()
+                    }));
+                    
+                    // Scroll para a mensagem de sucesso
+                    document.getElementById('successMessage').scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    
+                } catch (error) {
+                    console.error('Erro:', error);
+                    document.getElementById('processing').style.display = 'none';
+                    form.style.display = 'block';
+                    
+                    let errorMessage = 'Erro ao processar solicitação: ';
+                    
+                    if (error.message.includes('rate limit') || error.message.includes('429')) {
+                        errorMessage += 'Muitas tentativas. Aguarde alguns minutos antes de tentar novamente.';
+                    } else if (error.message.includes('network') || error.message.includes('fetch')) {
+                        errorMessage += 'Erro de conexão. Verifique sua internet e tente novamente.';
+                    } else {
+                        errorMessage += error.message || 'Erro desconhecido. Tente novamente ou entre em contato conosco.';
+                    }
+                    
+                    alert(errorMessage);
+                }
+            });
+            
+            // Auto-preenchimento se houver dados salvos
+            const savedRequest = localStorage.getItem('linkmagico_deletion_request');
+            if (savedRequest) {
+                try {
+                    const data = JSON.parse(savedRequest);
+                    if (data.status === 'submitted' && data.email) {
+                        const showSaved = confirm('Encontramos uma solicitação anterior. Deseja preencher os campos com esses dados?');
+                        if (showSaved) {
+                            document.getElementById('email').value = data.email || '';
+                            document.getElementById('robotName').value = data.robotName || '';
+                            document.getElementById('url').value = data.url || '';
+                            document.getElementById('reason').value = data.reason || '';
+                        }
+                    }
+                } catch (e) {
+                    // Ignora erros de parsing
+                }
+            }
+        });
+        
+        // Função para limpar dados salvos (pode ser chamada após processamento bem-sucedido)
+        function clearSavedData() {
+            localStorage.removeItem('linkmagico_deletion_request');
+        }
+        
+        // Função para validar e-mail em tempo real
+        document.addEventListener('DOMContentLoaded', function() {
+            const emailInput = document.getElementById('email');
+            if (emailInput) {
+                emailInput.addEventListener('blur', function() {
+                    const email = this.value.trim();
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    
+                    if (email && !emailRegex.test(email)) {
+                        this.style.borderColor = 'var(--error)';
+                        this.setAttribute('title', 'Por favor, insira um e-mail válido');
+                    } else {
+                        this.style.borderColor = '';
+                        this.removeAttribute('title');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
